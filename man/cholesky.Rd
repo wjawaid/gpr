@@ -4,12 +4,12 @@
 \alias{cholesky}
 \title{Cholesky decomposition}
 \usage{
-cholesky(K, σ2 = 1e-12, ...)
+cholesky(K, sigma2 = 1e-12, ...)
 }
 \arguments{
 \item{K}{Covariance matrix - symmetric positive definite}
 
-\item{σ2}{Noise term}
+\item{sigma2}{Noise term}
 
 \item{...}{Passed to R's built-in function}
 }

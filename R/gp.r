@@ -43,6 +43,8 @@ covMat <- function(x, y, cvFunc) {
 ##' @param mu Means to use for sampling
 ##' @return Vector of predictions
 ##' @author Wajid Jawaid
+##' @importFrom stats rnorm
+##' @export
 sampleFromK <- function(L, mu = 0) {
     if (!all(L[upper.tri(L)] == 0)) stop("L must be lower triangular from the cholesky decomposition")
     u <- rnorm(ncol(L), 0, 1)
@@ -56,13 +58,13 @@ sampleFromK <- function(L, mu = 0) {
 ##' to the diagonal
 ##' @title Cholesky decomposition
 ##' @param K Covariance matrix - symmetric positive definite
-##' @param σ2 Noise term
+##' @param sigma2 Noise term
 ##' @param ... Passed to R's built-in function
 ##' @return Lower triangular matrix
 ##' @author Wajid Jawaid
 ##' @export
-cholesky <- function(K, σ2 = 1e-12, ...) {
-    L <- t(base:::chol((K + diag(σ2, nrow(K), ncol(K))), ...))
+cholesky <- function(K, sigma2 = 1e-12, ...) {
+    L <- t(base::chol((K + diag(sigma2, nrow(K), ncol(K))), ...))
 }
 
 ##' GP engine - Finds posterior
@@ -84,6 +86,7 @@ cholesky <- function(K, σ2 = 1e-12, ...) {
 ##'   \item{marinal_likelihood}{Marginal likelihood of the model}
 ##' }
 ##' @author Wajid Jawaid
+##' @export
 predictGP <- function(x, y, xs, cvFunc, sigmaf = 1, l = 1, sigman = 0) {
     kxx <- covMat(x,x, function(xx, xy) cvFunc(xx, xy, sigmaf = sigmaf, sigman = sigman, l = l))
     kxxs <- covMat(x,xs, function(xx, xy) cvFunc(xx, xy, sigmaf = sigmaf, l = l))

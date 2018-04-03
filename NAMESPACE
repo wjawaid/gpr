@@ -3,3 +3,6 @@
 export(cf)
 export(cholesky)
 export(covMat)
+export(predictGP)
+export(sampleFromK)
+importFrom(stats,rnorm)

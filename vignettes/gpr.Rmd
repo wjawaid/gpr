@@ -9,50 +9,49 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+# gpr
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+Gaussian Process Regression allows simple use of gaussian processes to fit optimum lines without choosing a specific function. 
 
-## Vignette Info
+## Example
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+This is an example taken from Carl Rassmussen's book on Gaussian processes.
 
-## Styles
+```{r example1, fig.show = 'hold', fig.cap = 'Drawing random samples from prior.', fig.width =7, fig.height = 7, dev = "png"}
+library(gpr)
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+d <- .1
+x <- seq(-5,5,d)
+K <- covMat(x, x, function(xx,xy) cf(xx,xy, l = 2))
+L <- cholesky(K)
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+plot(NULL, xlim=c(-5,5), ylim=c(-2.5,2.5), xlab = "time", ylab = "counts")
+rect(-6, -2, 6, 2, col="#44444411", lty=0)
+for (i in 1:4) {
+    y <- sampleFromK(L)
+    points(x,y, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
+}
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+```{r example2, fig.show = 'hold', fig.cap = 'Posterior distribution after adding data with random samples drawn.', fig.width = 7, fig.height = 7, dev = 'png'}
+x <- c(-4,-3,-1,0,2)
+y <- c(-2,0,1,2,-1)
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+pst <- predictGP(x, y, xs = seq(-5,5,.1), cvFunc = cf, sigman = 0.1, l = 1)
+par(oma = c(0,0,0,0))
+ci <- qnorm(.975) * sqrt(diag(pst$cv))
+plot(pst$x, pst$mean, type = "p", col = "darkgray", xlab = "x", ylab = "y", ylim = range(c(pst$mean + ci, rev(pst$mean - ci))), xaxs = "i", pch = 16, cex = .2)
+polygon(c(pst$x, rev(pst$x)), c(pst$mean + ci, rev(pst$mean - ci)), col = "#CCCCCC", lty = 0)
+points(pst$x, pst$mean, type="l", col = "#444444", pch=16, cex=.2)
+points(x, y, pch=3, cex=2)
+points(pst$x, pst$mean + ci, col="darkgray", lty=2, type="l")
+points(pst$x, pst$mean - ci, col="darkgray", lty=2, type="l")
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
 
-## More Examples
+L <- cholesky(pst$cv)
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+for (i in 1:10) {
+    yo <- sampleFromK(L, mu = pst$mean)
+    points(pst$x,yo, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
+}
 ```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))

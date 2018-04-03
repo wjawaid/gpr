@@ -1,12 +1,12 @@
 Package: gpr
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Gaussian Process Regression
+Version: 1.0.0
 Date: 2018-04-01
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Wajid Jawaid
+Maintainer: Wajid Jawaid <wj241@cam.ac.uk>
+Description: Gaussian process regression inference based upon Carl Rasmussen's book.
+License: GPL (>=2)
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
