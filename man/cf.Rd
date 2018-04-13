@@ -4,7 +4,7 @@
 \alias{cf}
 \title{Covariance function}
 \usage{
-cf(x, y, sigmaf = 1, l = 1, sigman = 0)
+cf(x, y, sigmaf = 1, l = 1)
 }
 \arguments{
 \item{x}{First value}
@@ -14,8 +14,6 @@ cf(x, y, sigmaf = 1, l = 1, sigman = 0)
 \item{sigmaf}{See equation above}
 
 \item{l}{See equation above}
-
-\item{sigman}{See equation above}
 }
 \value{
 Calculated covariance
@@ -25,7 +23,23 @@ Covariance function
 }
 \details{
 Covariance function for - The squared exponential covariance function
-\eqn{k_{x,y} = \sigma_f^2 exp(-frac{1}{2l^2}(x - y)^2) + \delta_{xy} \sigma_n^2}
+\eqn{k_{x,y} = \sigma_f^2 exp(-\frac{1}{2l^2}(x - y)^2)}
+}
+\examples{
+set.seed(0)
+library(gpr)
+
+d <- .1
+x <- seq(-5,5,d)
+K <- covMat(x, x, function(xx,xy) cf(xx,xy, l = 2))
+L <- cholesky(K)
+
+plot(NULL, xlim=c(-5,5), ylim=c(-2.5,2.5), xlab = "time", ylab = "counts")
+rect(-6, -2, 6, 2, col="#44444411", lty=0)
+for (i in 1:4) {
+  y <- sampleFromL(L)
+  points(x,y, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
+}
 }
 \author{
 Wajid Jawaid

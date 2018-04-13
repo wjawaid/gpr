@@ -13,7 +13,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "./tools/README-"
-)
+  )
+set.seed(0)
 ```
 
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
@@ -24,7 +25,7 @@ Gaussian Process Regression allows simple use of gaussian processes to fit optim
 
 ## Example
 
-This is an example taken from Carl Rassmussen's book on Gaussian processes.
+This is an example taken from Carl Rassmussen's book on Gaussian processes. We can first sample from the prior.
 
 ```{r example1, fig.show = 'hold', fig.cap = 'Drawing random samples from prior.', fig.width =7, fig.height = 7, dev = "png"}
 library(gpr)
@@ -37,30 +38,28 @@ L <- cholesky(K)
 plot(NULL, xlim=c(-5,5), ylim=c(-2.5,2.5), xlab = "time", ylab = "counts")
 rect(-6, -2, 6, 2, col="#44444411", lty=0)
 for (i in 1:4) {
-    y <- sampleFromK(L)
+    y <- sampleFromL(L)
     points(x,y, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
 }
 ```
 
-```{r example2, fig.show = 'hold', fig.cap = 'Posterior distribution after adding data with random samples drawn.', fig.width = 7, fig.height = 7, dev = 'png'}
+Now we can add data points (-4,-2); (-3,0); (-1,1); (0,2) and (2,-1). Now we can find the posterior distribution.
+
+```{r example2, fig.show = 'hold', fig.cap = 'Posterior distribution after adding data', fig.width = 7, fig.height = 7, dev = 'png'}
 x <- c(-4,-3,-1,0,2)
 y <- c(-2,0,1,2,-1)
 
 pst <- predictGP(x, y, xs = seq(-5,5,.1), cvFunc = cf, sigman = 0.1, l = 1)
-par(oma = c(0,0,0,0))
-ci <- qnorm(.975) * sqrt(diag(pst$cv))
-plot(pst$x, pst$mean, type = "p", col = "darkgray", xlab = "x", ylab = "y", ylim = range(c(pst$mean + ci, rev(pst$mean - ci))), xaxs = "i", pch = 16, cex = .2)
-polygon(c(pst$x, rev(pst$x)), c(pst$mean + ci, rev(pst$mean - ci)), col = "#CCCCCC", lty = 0)
-points(pst$x, pst$mean, type="l", col = "#444444", pch=16, cex=.2)
-points(x, y, pch=3, cex=2)
-points(pst$x, pst$mean + ci, col="darkgray", lty=2, type="l")
-points(pst$x, pst$mean - ci, col="darkgray", lty=2, type="l")
+plot(pst, p.pch = 3, p.cex = 2, xlab = "x", ylab = "y")
+```
 
-
+Now we can sample from the new posterior.
+```{r example3, fig.show = 'hold', fig.cap = 'Random samples drawn from the posterior', fig.width = 7, fig.height = 7, dev = 'png'}
+plot(pst, p.pch = 3, p.cex = 2, xlab = "x", ylab = "y")
 L <- cholesky(pst$cv)
 
-for (i in 1:10) {
-    yo <- sampleFromK(L, mu = pst$mean)
+for (i in 1:5) {
+    yo <- sampleFromL(L, mu = pst$mean)
     points(pst$x,yo, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
 }
 ```

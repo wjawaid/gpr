@@ -24,6 +24,22 @@ Cholesky decomposition
 The R function returns an upper triangular matrix. Additionally this adds a little noise
 to the diagonal
 }
+\examples{
+set.seed(0)
+library(gpr)
+
+d <- .1
+x <- seq(-5,5,d)
+K <- covMat(x, x, function(xx,xy) cf(xx,xy, l = 2))
+L <- cholesky(K)
+
+plot(NULL, xlim=c(-5,5), ylim=c(-2.5,2.5), xlab = "time", ylab = "counts")
+rect(-6, -2, 6, 2, col="#44444411", lty=0)
+for (i in 1:4) {
+  y <- sampleFromL(L)
+  points(x,y, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
+}
+}
 \author{
 Wajid Jawaid
 }

@@ -4,7 +4,7 @@
 \alias{covMat}
 \title{Calculate Covariance matrix}
 \usage{
-covMat(x, y, cvFunc)
+covMat(x, y, cvFunc, sigman = 0)
 }
 \arguments{
 \item{x}{Rows of covariance matrix}
@@ -12,6 +12,8 @@ covMat(x, y, cvFunc)
 \item{y}{Columns of covariance matrix}
 
 \item{cvFunc}{Covariance function to be used see \code{\link{cf}}}
+
+\item{sigman}{See equation above}
 }
 \value{
 Returns a covariance matrix
@@ -21,6 +23,22 @@ Calculate Covariance matrix
 }
 \details{
 Calculate Covariance matrix
+}
+\examples{
+set.seed(0)
+library(gpr)
+
+d <- .1
+x <- seq(-5,5,d)
+K <- covMat(x, x, function(xx,xy) cf(xx,xy, l = 2))
+L <- cholesky(K)
+
+plot(NULL, xlim=c(-5,5), ylim=c(-2.5,2.5), xlab = "time", ylab = "counts")
+rect(-6, -2, 6, 2, col="#44444411", lty=0)
+for (i in 1:4) {
+  y <- sampleFromL(L)
+  points(x,y, pch=16, xlim=c(-5,5), ylim=c(-2,2), cex=.2, col = i, type = "l")
+}
 }
 \author{
 Wajid Jawaid

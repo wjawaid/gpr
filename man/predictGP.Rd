@@ -4,7 +4,8 @@
 \alias{predictGP}
 \title{GP engine - Finds posterior}
 \usage{
-predictGP(x, y, xs, cvFunc, sigmaf = 1, l = 1, sigman = 0)
+predictGP(x, y, xs, cvFunc, mFunc = mf, sigmaf = 1, l = 1, sigman = 0,
+  verbose = FALSE)
 }
 \arguments{
 \item{x}{Measured input values}
@@ -15,11 +16,15 @@ predictGP(x, y, xs, cvFunc, sigmaf = 1, l = 1, sigman = 0)
 
 \item{cvFunc}{Which covariance function to use}
 
+\item{mFunc}{Default 0. Mean function}
+
 \item{sigmaf}{Passed to \code{\link{cf}}}
 
 \item{l}{Passed to \code{\link{cf}}}
 
 \item{sigman}{Passed to \code{\link{cf}}}
+
+\item{verbose}{To print progress}
 }
 \value{
 Returns a list containing:
@@ -35,6 +40,13 @@ GP engine - Finds posterior
 }
 \details{
 GP engine - Finds posterior
+}
+\examples{
+x <- c(-4,-3,-1,0,2)
+y <- c(-2,0,1,2,-1)
+
+pst <- predictGP(x, y, xs = seq(-5,5,.1), cvFunc = cf, sigman = 0.1, l = 1)
+plot(pst, p.pch = 3, p.cex = 2, xlab = "x", ylab = "y")
 }
 \author{
 Wajid Jawaid
