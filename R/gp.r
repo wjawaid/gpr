@@ -248,7 +248,7 @@ plot.gpr <- function(x, xl = NULL, xu = NULL, yl = NULL, yu = NULL, ci = 0.975,
             ifelse(is.null(xu), max(x$observed$x, x$x), xu))
     yl <- c(ifelse(is.null(yl), min(c(x$observed$y, x$mean - ci)), yl),
             ifelse(is.null(yu), max(c(x$observed$y, x$mean + ci)), yu))
-    par(oma = c(0,0,0,0))
+    ## par(oma = c(0,0,0,0))
     plot(NULL, xlim = xl, ylim = yl, xaxs = xaxs, xlab = xlab, ylab = ylab, ...)
     points(x$x, x$mean, type = "p", col = "darkgray", pch = 1, cex = .2)
     polygon(c(x$x, rev(x$x)), c(x$mean + ci, rev(x$mean - ci)), col = ci.col, lty = 0)

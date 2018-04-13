@@ -1,3 +1,8 @@
+# gpr 1.0.2
+
+* Modified `plot.gpr` function so that multiple plots can be plotted per page
+
+
 # gpr 1.0.1
 
 * Added a `NEWS.md` file to track changes to the package.

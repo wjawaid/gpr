@@ -1,7 +1,7 @@
 Package: gpr
 Type: Package
 Title: Gaussian Process Regression
-Version: 1.0.1
+Version: 1.0.2
 Date: 2018-04-01
 Author: Wajid Jawaid
 Maintainer: Wajid Jawaid <wj241@cam.ac.uk>
